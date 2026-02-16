@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ed1d24">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="description" content="Marvel filmlerini ve dizilerini takip edin">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,17 +17,18 @@
     <style>
         /* ========== CSS VARIABLES ========== */
         :root {
-            --marvel-red: #ed1d24;
-            --marvel-dark: #0a0a0a;
-            --marvel-gray: #1a1a1a;
-            --marvel-light: #f0f0f0;
-            --marvel-yellow: #ffed00;
-            --marvel-blue: #0476f2;
-            --marvel-purple: #9b51e0;
+            --primary-bg: #0f1419;
+            --secondary-bg: #1a1f29;
+            --card-bg: #1e2430;
+            --accent-red: #e50914;
+            --movie-color: #3b82f6;
+            --series-color: #a855f7;
             --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --card-bg: #151515;
-            --border-color: #2a2a2a;
+            --text-secondary: #9ca3af;
+            --border-color: #2d3748;
+            --success-color: #10b981;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
         }
 
         /* ========== RESET & BASE ========== */
@@ -35,11 +39,8 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: var(--marvel-dark);
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(237, 29, 36, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(4, 118, 242, 0.05) 0%, transparent 50%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f29 100%);
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
@@ -47,43 +48,117 @@
             padding-bottom: 2rem;
         }
 
-        /* ========== TYPOGRAPHY ========== */
-        h1, h2, h3 {
-            font-weight: 900;
-            letter-spacing: -0.02em;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         /* ========== HEADER ========== */
         .header {
-            background: linear-gradient(135deg, #ed1d24 0%, #b8151b 100%);
-            padding: 2rem 1rem 1.5rem;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 1rem;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            border-bottom: 3px solid var(--marvel-yellow);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .header-title {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             text-align: center;
             margin-bottom: 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            letter-spacing: 0.1em;
-            background: linear-gradient(to right, #fff, #ffed00);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* ========== NEXT TO WATCH ========== */
+        .next-watch {
+            margin: 1.5rem 1rem 0;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .next-watch-header {
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .next-watch-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .next-watch-content {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            align-items: center;
+        }
+
+        .next-watch-poster {
+            width: 80px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .next-watch-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .next-watch-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .next-watch-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
         /* ========== PROGRESS SECTION ========== */
         .progress-section {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            background: rgba(30, 36, 48, 0.6);
+            backdrop-filter: blur(10px);
             padding: 1.5rem;
             margin: 1rem 1rem 0;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
         }
 
         .progress-stats {
@@ -99,12 +174,15 @@
         }
 
         .stat-number {
-            color: var(--marvel-red);
-            font-size: 2rem;
-            font-weight: 900;
-            text-shadow: 0 0 10px rgba(237, 29, 36, 0.5);
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            font-weight: 700;
             line-height: 1;
             margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-label {
@@ -112,63 +190,49 @@
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .progress-bar-container {
-            background: var(--marvel-dark);
-            height: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            height: 8px;
             border-radius: 20px;
             overflow: hidden;
             position: relative;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--marvel-red) 0%, var(--marvel-yellow) 100%);
-            transition: width 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 20px;
             position: relative;
-            box-shadow: 0 0 10px rgba(237, 29, 36, 0.6);
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
         }
 
         .progress-percentage {
             text-align: center;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
             font-size: 0.9rem;
-            color: var(--marvel-yellow);
-            font-weight: 900;
+            color: var(--text-secondary);
+            font-weight: 600;
         }
 
         /* ========== FILTERS ========== */
         .filters {
             padding: 1.5rem;
-            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            background: rgba(30, 36, 48, 0.6);
+            backdrop-filter: blur(10px);
             margin: 1rem 1rem 0;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
         }
 
         .filter-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .filter-group:last-child {
@@ -176,12 +240,12 @@
         }
 
         .filter-label {
-            font-size: 0.7rem;
-            color: var(--marvel-yellow);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             margin-bottom: 0.8rem;
             display: block;
-            letter-spacing: 0.15em;
-            font-weight: 700;
+            letter-spacing: 0.1em;
+            font-weight: 600;
             text-transform: uppercase;
         }
 
@@ -192,132 +256,123 @@
         }
 
         .filter-btn {
-            padding: 0.7rem 1.3rem;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-primary);
-            font-weight: 700;
-            font-size: 0.75rem;
+            padding: 0.7rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            text-transform: none;
+            letter-spacing: 0;
             font-family: inherit;
             border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .filter-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .filter-btn:hover::before {
-            left: 100%;
         }
 
         .filter-btn:hover {
-            border-color: var(--marvel-red);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(237, 29, 36, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            transform: translateY(-1px);
         }
 
         .filter-btn.active {
-            background: linear-gradient(135deg, var(--marvel-red) 0%, #b8151b 100%);
-            border-color: var(--marvel-red);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
             color: white;
-            box-shadow: 0 4px 16px rgba(237, 29, 36, 0.5);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .phase-select {
             width: 100%;
             padding: 0.9rem;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             color: var(--text-primary);
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-weight: 500;
+            font-size: 0.9rem;
             font-family: inherit;
             cursor: pointer;
-            text-transform: uppercase;
             transition: all 0.3s;
         }
 
         .phase-select:hover {
-            border-color: var(--marvel-red);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .phase-select:focus {
             outline: none;
-            border-color: var(--marvel-yellow);
-            box-shadow: 0 0 0 3px rgba(255, 237, 0, 0.2);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .action-buttons {
             display: flex;
             gap: 0.6rem;
-            margin-top: 1.5rem;
+            margin-top: 1.2rem;
             flex-wrap: wrap;
         }
 
         .action-btn {
             flex: 1;
-            min-width: 120px;
+            min-width: 130px;
             padding: 0.9rem;
-            background: var(--marvel-dark);
-            border: 2px solid var(--marvel-blue);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            color: var(--marvel-blue);
-            font-weight: 700;
-            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            text-transform: none;
             font-family: inherit;
         }
 
         .action-btn:hover {
-            background: var(--marvel-blue);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(4, 118, 242, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            transform: translateY(-1px);
         }
 
         .action-btn.danger {
-            border-color: var(--marvel-red);
-            color: var(--marvel-red);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
         }
 
         .action-btn.danger:hover {
-            background: var(--marvel-red);
-            color: white;
-            box-shadow: 0 4px 12px rgba(237, 29, 36, 0.4);
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.5);
         }
 
         /* ========== CONTENT LIST ========== */
         .content-list {
             padding: 0 1rem;
             margin-top: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .content-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            background: rgba(30, 36, 48, 0.6);
+            backdrop-filter: blur(10px);
             margin-bottom: 1rem;
-            border: 2px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             animation: slideIn 0.4s ease-out backwards;
+        }
+
+        .content-card.movie {
+            border-left: 3px solid var(--movie-color);
+        }
+
+        .content-card.series {
+            border-left: 3px solid var(--series-color);
         }
 
         @keyframes slideIn {
@@ -332,14 +387,13 @@
         }
 
         .content-card:hover {
-            border-color: var(--marvel-red);
-            box-shadow: 0 12px 32px rgba(237, 29, 36, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
             transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .content-card.watched {
-            opacity: 0.6;
-            border-color: #333;
+            opacity: 0.5;
         }
 
         .content-card.watched:hover {
@@ -349,7 +403,7 @@
         .card-header {
             display: flex;
             gap: 1rem;
-            padding: 1rem;
+            padding: 1.2rem;
             cursor: pointer;
             position: relative;
         }
@@ -357,13 +411,12 @@
         .poster {
             width: 100px;
             height: 150px;
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            border: 2px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .poster img {
@@ -375,21 +428,21 @@
         }
 
         .content-card:hover .poster img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .poster.loading {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
         }
 
         .poster.loading::after {
             content: 'M';
             font-weight: 900;
-            color: rgba(237, 29, 36, 0.2);
-            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 3rem;
         }
 
         .card-info {
@@ -401,10 +454,10 @@
         }
 
         .card-title {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
             line-height: 1.3;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-primary);
         }
 
@@ -412,70 +465,75 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 0.5rem;
+            margin-top: 0.6rem;
         }
 
         .tag {
-            padding: 0.35rem 0.7rem;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            padding: 0.35rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
             border-radius: 6px;
-            border: 1.5px solid;
         }
 
         .tag-type {
-            background: rgba(4, 118, 242, 0.15);
-            border-color: var(--marvel-blue);
-            color: var(--marvel-blue);
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--movie-color);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .tag-type.series {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--series-color);
+            border: 1px solid rgba(168, 85, 247, 0.3);
         }
 
         .tag-phase {
-            background: rgba(155, 81, 224, 0.15);
-            border-color: var(--marvel-purple);
-            color: var(--marvel-purple);
+            background: rgba(156, 163, 175, 0.15);
+            color: var(--text-secondary);
+            border: 1px solid rgba(156, 163, 175, 0.2);
         }
 
         .tag-year {
-            background: rgba(176, 176, 176, 0.15);
-            border-color: var(--text-secondary);
+            background: rgba(156, 163, 175, 0.1);
             color: var(--text-secondary);
+            border: 1px solid rgba(156, 163, 175, 0.15);
         }
 
         .tag-family {
-            background: rgba(0, 255, 0, 0.15);
-            border-color: #00ff00;
-            color: #00ff00;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .checkbox-container {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 1.2rem;
+            right: 1.2rem;
         }
 
         .watched-checkbox {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
             position: relative;
             appearance: none;
-            background: var(--marvel-dark);
-            border: 3px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 6px;
             transition: all 0.3s;
         }
 
         .watched-checkbox:hover {
-            border-color: var(--marvel-red);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
 
         .watched-checkbox:checked {
-            background: var(--marvel-red);
-            border-color: var(--marvel-red);
-            box-shadow: 0 0 12px rgba(237, 29, 36, 0.6);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            box-shadow: 0 0 16px rgba(102, 126, 234, 0.5);
         }
 
         .watched-checkbox:checked::after {
@@ -485,16 +543,16 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: 1.3rem;
-            font-weight: 900;
+            font-size: 1rem;
+            font-weight: 700;
         }
 
         .card-description {
-            padding: 0 1rem 1rem;
+            padding: 0 1.2rem 1.2rem;
             color: var(--text-secondary);
             font-size: 0.9rem;
             line-height: 1.7;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             margin-top: 1rem;
             display: none;
             animation: expandDown 0.3s ease-out;
@@ -508,7 +566,7 @@
             }
             to {
                 opacity: 1;
-                padding-top: 1rem;
+                padding-top: 1.2rem;
             }
         }
 
@@ -522,34 +580,38 @@
             bottom: 1rem;
             left: 1rem;
             right: 1rem;
-            background: linear-gradient(135deg, var(--marvel-red) 0%, #b8151b 100%);
+            background: rgba(30, 36, 48, 0.95);
+            backdrop-filter: blur(20px);
             padding: 1.5rem;
-            border-radius: 12px;
-            border: 3px solid var(--marvel-yellow);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
             animation: slideUp 0.5s ease-out;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         }
 
         @keyframes slideUp {
             from {
                 transform: translateY(150%);
+                opacity: 0;
             }
             to {
                 transform: translateY(0);
+                opacity: 1;
             }
         }
 
         .install-prompt h3 {
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .install-prompt p {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             margin-bottom: 1rem;
+            color: var(--text-secondary);
             font-weight: normal;
-            opacity: 0.95;
         }
 
         .install-buttons {
@@ -562,35 +624,33 @@
             padding: 0.9rem;
             border: none;
             border-radius: 8px;
-            font-weight: 900;
-            font-size: 0.85rem;
+            font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            text-transform: none;
             transition: all 0.3s;
             font-family: inherit;
         }
 
         .install-btn.primary {
-            background: var(--marvel-yellow);
-            color: var(--marvel-dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
 
         .install-btn.primary:hover {
-            background: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .install-btn.secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .install-btn.secondary:hover {
-            background: white;
-            color: var(--marvel-red);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
         }
 
         /* ========== EMPTY STATE ========== */
@@ -603,21 +663,22 @@
         .empty-state h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
-            color: var(--marvel-red);
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 480px) {
             .header-title {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
             
             .stat-number {
-                font-size: 1.5rem;
+                font-size: 2rem;
             }
             
             .filter-btn {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
                 padding: 0.6rem 1rem;
             }
             
@@ -632,7 +693,16 @@
 
             .action-btn {
                 min-width: 100px;
-                font-size: 0.65rem;
+                font-size: 0.75rem;
+            }
+
+            .next-watch-poster {
+                width: 60px;
+                height: 90px;
+            }
+
+            .next-watch-content {
+                padding: 1rem;
             }
         }
     </style>
@@ -661,10 +731,26 @@
         <div class="progress-percentage" id="progressPercentage">0%</div>
     </div>
 
+    <!-- Next to Watch -->
+    <div class="next-watch" id="nextWatch" style="display: none;">
+        <div class="next-watch-header">
+            <div class="next-watch-title">🎬 Sırada İzlemeniz Gereken</div>
+        </div>
+        <div class="next-watch-content">
+            <div class="next-watch-poster" id="nextWatchPoster">
+                <img src="" alt="" id="nextWatchPosterImg">
+            </div>
+            <div class="next-watch-info">
+                <h3 id="nextWatchName"></h3>
+                <div class="next-watch-meta" id="nextWatchMeta"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Filters -->
     <div class="filters">
         <div class="filter-group">
-            <label class="filter-label">TÜR</label>
+            <label class="filter-label">Tür</label>
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="type" data-value="all">Tümü</button>
                 <button class="filter-btn" data-filter="type" data-value="movie">Filmler</button>
@@ -673,7 +759,7 @@
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">DURUM</label>
+            <label class="filter-label">Durum</label>
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="status" data-value="all">Tümü</button>
                 <button class="filter-btn" data-filter="status" data-value="watched">İzlediklerim</button>
@@ -682,7 +768,7 @@
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">AİLE UYGUN</label>
+            <label class="filter-label">Aile Uygun</label>
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="family" data-value="all">Tümü</button>
                 <button class="filter-btn" data-filter="family" data-value="yes">Aile İçin</button>
@@ -690,15 +776,7 @@
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">SIRALAMA</label>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="sortOrder" data-value="release">Yayın Sırası</button>
-                <button class="filter-btn" data-filter="sortOrder" data-value="chronological">Kronolojik Sıra</button>
-            </div>
-        </div>
-
-        <div class="filter-group">
-            <label class="filter-label">FAZ</label>
+            <label class="filter-label">Faz</label>
             <select class="phase-select" id="phaseFilter">
                 <option value="all">Tüm Fazlar</option>
                 <option value="1">Faz 1</option>
@@ -711,9 +789,9 @@
         </div>
 
         <div class="action-buttons">
-            <button class="action-btn" id="clearFilters">FİLTRELERİ TEMİZLE</button>
-            <button class="action-btn" id="markAllWatched">TÜMÜNÜ İŞARETLE</button>
-            <button class="action-btn danger" id="resetData">VERİLERİ SIFIRLA</button>
+            <button class="action-btn" id="clearFilters">Filtreleri Temizle</button>
+            <button class="action-btn" id="markAllWatched">Tümünü İşaretle</button>
+            <button class="action-btn danger" id="resetData">Verileri Sıfırla</button>
         </div>
     </div>
 
@@ -796,8 +874,7 @@
             type: 'all',
             status: 'all',
             family: 'all',
-            phase: 'all',
-            sortOrder: 'release' // 'release' veya 'chronological'
+            phase: 'all'
         };
 
         let watchedItems = JSON.parse(localStorage.getItem('marvelWatched')) || [];
@@ -815,6 +892,7 @@
             // Render initial content
             renderContent();
             updateProgress();
+            updateNextWatch();
 
             // Show install prompt if not dismissed
             showInstallPrompt();
@@ -872,14 +950,13 @@
                 type: 'all',
                 status: 'all',
                 family: 'all',
-                phase: 'all',
-                sortOrder: 'release'
+                phase: 'all'
             };
 
             // Reset UI
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.value === 'all' || (btn.dataset.filter === 'sortOrder' && btn.dataset.value === 'release')) {
+                if (btn.dataset.value === 'all') {
                     btn.classList.add('active');
                 }
             });
@@ -904,7 +981,7 @@
             }
 
             container.innerHTML = filtered.map((item, index) => `
-                <div class="content-card ${item.watched ? 'watched' : ''}" style="animation-delay: ${index * 0.05}s">
+                <div class="content-card ${item.watched ? 'watched' : ''} ${item.type}" style="animation-delay: ${index * 0.05}s">
                     <div class="card-header" onclick="toggleDescription(${item.id})">
                         <div class="poster">
                             <img src="${item.poster}" alt="${item.title}" loading="lazy" onerror="this.parentElement.classList.add('loading'); this.style.display='none';">
@@ -912,10 +989,10 @@
                         <div class="card-info">
                             <div class="card-title">${item.title}</div>
                             <div class="card-meta">
-                                <span class="tag tag-type">${item.type === 'movie' ? 'FİLM' : 'DİZİ'}</span>
-                                <span class="tag tag-phase">FAZ ${item.phase}</span>
+                                <span class="tag tag-type ${item.type}">${item.type === 'movie' ? 'Film' : 'Dizi'}</span>
+                                <span class="tag tag-phase">Faz ${item.phase}</span>
                                 <span class="tag tag-year">${item.year}</span>
-                                ${item.isFamilyFriendly ? '<span class="tag tag-family">AİLE</span>' : ''}
+                                ${item.isFamilyFriendly ? '<span class="tag tag-family">Aile</span>' : ''}
                             </div>
                         </div>
                         <div class="checkbox-container">
@@ -963,17 +1040,11 @@
                     return true;
                 })
                 .sort((a, b) => {
-                    // Sıralama tipine göre sırala
-                    if (currentFilters.sortOrder === 'chronological') {
-                        // Kronolojik sıra (hikaye sırası)
-                        return a.chronologicalOrder - b.chronologicalOrder;
-                    } else {
-                        // Yayın sırası (çıkış yılı)
-                        if (a.year !== b.year) {
-                            return a.year - b.year;
-                        }
-                        return a.id - b.id;
+                    // Yayın sırasına göre (çıkış yılı)
+                    if (a.year !== b.year) {
+                        return a.year - b.year;
                     }
+                    return a.id - b.id;
                 });
         }
 
@@ -990,6 +1061,7 @@
 
             localStorage.setItem('marvelWatched', JSON.stringify(watchedItems));
             updateProgress();
+            updateNextWatch();
         }
 
         function toggleDescription(id) {
@@ -1009,6 +1081,30 @@
             document.getElementById('progressPercentage').textContent = percentage + '%';
         }
 
+        // ========== NEXT TO WATCH ==========
+        function updateNextWatch() {
+            // Yayın sırasına göre bir sonraki izlenmemiş içerik
+            const nextItem = marvelContent
+                .filter(i => !i.watched)
+                .sort((a, b) => {
+                    if (a.year !== b.year) return a.year - b.year;
+                    return a.id - b.id;
+                })[0];
+
+            const nextWatch = document.getElementById('nextWatch');
+            
+            if (nextItem) {
+                document.getElementById('nextWatchName').textContent = nextItem.title;
+                document.getElementById('nextWatchMeta').textContent = 
+                    `${nextItem.type === 'movie' ? 'Film' : 'Dizi'} • ${nextItem.year} • Faz ${nextItem.phase}`;
+                document.getElementById('nextWatchPosterImg').src = nextItem.poster;
+                document.getElementById('nextWatchPosterImg').alt = nextItem.title;
+                nextWatch.style.display = 'block';
+            } else {
+                nextWatch.style.display = 'none';
+            }
+        }
+
         // ========== ACTION BUTTONS ==========
         function markAllWatched() {
             const filtered = getFilteredContent();
@@ -1022,6 +1118,7 @@
                 localStorage.setItem('marvelWatched', JSON.stringify(watchedItems));
                 renderContent();
                 updateProgress();
+                updateNextWatch();
             }
         }
 
@@ -1032,6 +1129,7 @@
                 marvelContent.forEach(item => item.watched = false);
                 renderContent();
                 updateProgress();
+                updateNextWatch();
             }
         }
 
