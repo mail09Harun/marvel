@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ed1d24">
+    <meta name="description" content="Marvel filmlerini ve dizilerini takip edin">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="./manifest.json">
+    <title>Marvel İzleme Takibi</title>
+    
+    <style>
+        /* ========== CSS VARIABLES ========== */
+        :root {
+            --marvel-red: #ed1d24;
+            --marvel-dark: #0a0a0a;
+            --marvel-gray: #1a1a1a;
+            --marvel-light: #f0f0f0;
+            --marvel-yellow: #ffed00;
+            --marvel-blue: #0476f2;
+            --marvel-purple: #9b51e0;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --card-bg: #151515;
+            --border-color: #2a2a2a;
+        }
+
+        /* ========== RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: var(--marvel-dark);
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(237, 29, 36, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(4, 118, 242, 0.05) 0%, transparent 50%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        /* ========== TYPOGRAPHY ========== */
+        h1, h2, h3 {
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: linear-gradient(135deg, #ed1d24 0%, #b8151b 100%);
+            padding: 2rem 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-bottom: 3px solid var(--marvel-yellow);
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.1em;
+            background: linear-gradient(to right, #fff, #ffed00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========== PROGRESS SECTION ========== */
+        .progress-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            padding: 1.5rem;
+            margin: 1rem 1rem 0;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            color: var(--marvel-red);
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(237, 29, 36, 0.5);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            background: var(--marvel-dark);
+            height: 12px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--marvel-red) 0%, var(--marvel-yellow) 100%);
+            transition: width 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(237, 29, 36, 0.6);
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-percentage {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--marvel-yellow);
+            font-weight: 900;
+        }
+
+        /* ========== FILTERS ========== */
+        .filters {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            margin: 1rem 1rem 0;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            color: var(--marvel-yellow);
+            margin-bottom: 0.8rem;
+            display: block;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.3rem;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-family: inherit;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .filter-btn:hover::before {
+            left: 100%;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--marvel-red);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(237, 29, 36, 0.3);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--marvel-red) 0%, #b8151b 100%);
+            border-color: var(--marvel-red);
+            color: white;
+            box-shadow: 0 4px 16px rgba(237, 29, 36, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .phase-select {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .phase-select:hover {
+            border-color: var(--marvel-red);
+        }
+
+        .phase-select:focus {
+            outline: none;
+            border-color: var(--marvel-yellow);
+            box-shadow: 0 0 0 3px rgba(255, 237, 0, 0.2);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.9rem;
+            background: var(--marvel-dark);
+            border: 2px solid var(--marvel-blue);
+            border-radius: 8px;
+            color: var(--marvel-blue);
+            font-weight: 700;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-family: inherit;
+        }
+
+        .action-btn:hover {
+            background: var(--marvel-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(4, 118, 242, 0.4);
+        }
+
+        .action-btn.danger {
+            border-color: var(--marvel-red);
+            color: var(--marvel-red);
+        }
+
+        .action-btn.danger:hover {
+            background: var(--marvel-red);
+            color: white;
+            box-shadow: 0 4px 12px rgba(237, 29, 36, 0.4);
+        }
+
+        /* ========== CONTENT LIST ========== */
+        .content-list {
+            padding: 0 1rem;
+            margin-top: 1rem;
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            margin-bottom: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideIn 0.4s ease-out backwards;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .content-card:hover {
+            border-color: var(--marvel-red);
+            box-shadow: 0 12px 32px rgba(237, 29, 36, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .content-card.watched {
+            opacity: 0.6;
+            border-color: #333;
+        }
+
+        .content-card.watched:hover {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .poster {
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .content-card:hover .poster img {
+            transform: scale(1.05);
+        }
+
+        .poster.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .poster.loading::after {
+            content: 'M';
+            font-weight: 900;
+            color: rgba(237, 29, 36, 0.2);
+            font-size: 4rem;
+        }
+
+        .card-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 6px;
+            border: 1.5px solid;
+        }
+
+        .tag-type {
+            background: rgba(4, 118, 242, 0.15);
+            border-color: var(--marvel-blue);
+            color: var(--marvel-blue);
+        }
+
+        .tag-phase {
+            background: rgba(155, 81, 224, 0.15);
+            border-color: var(--marvel-purple);
+            color: var(--marvel-purple);
+        }
+
+        .tag-year {
+            background: rgba(176, 176, 176, 0.15);
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        .tag-family {
+            background: rgba(0, 255, 0, 0.15);
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .checkbox-container {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .watched-checkbox {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            position: relative;
+            appearance: none;
+            background: var(--marvel-dark);
+            border: 3px solid var(--border-color);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .watched-checkbox:hover {
+            border-color: var(--marvel-red);
+            transform: scale(1.1);
+        }
+
+        .watched-checkbox:checked {
+            background: var(--marvel-red);
+            border-color: var(--marvel-red);
+            box-shadow: 0 0 12px rgba(237, 29, 36, 0.6);
+        }
+
+        .watched-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 900;
+        }
+
+        .card-description {
+            padding: 0 1rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            border-top: 1px solid var(--border-color);
+            margin-top: 1rem;
+            display: none;
+            animation: expandDown 0.3s ease-out;
+            font-weight: normal;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                padding-top: 0;
+            }
+            to {
+                opacity: 1;
+                padding-top: 1rem;
+            }
+        }
+
+        .card-description.show {
+            display: block;
+        }
+
+        /* ========== INSTALL PROMPT ========== */
+        .install-prompt {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--marvel-red) 0%, #b8151b 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 3px solid var(--marvel-yellow);
+            z-index: 1000;
+            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(150%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .install-prompt h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .install-prompt p {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            font-weight: normal;
+            opacity: 0.95;
+        }
+
+        .install-buttons {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .install-btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .install-btn.primary {
+            background: var(--marvel-yellow);
+            color: var(--marvel-dark);
+        }
+
+        .install-btn.primary:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .install-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .install-btn.secondary:hover {
+            background: white;
+            color: var(--marvel-red);
+        }
+
+        /* ========== EMPTY STATE ========== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--marvel-red);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.6rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .filter-btn {
+                font-size: 0.7rem;
+                padding: 0.6rem 1rem;
+            }
+            
+            .poster {
+                width: 80px;
+                height: 120px;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+            }
+
+            .action-btn {
+                min-width: 100px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1 class="header-title">MARVEL İZLEME TAKİBİ</h1>
+    </header>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+        <div class="progress-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="watchedCount">0</div>
+                <div class="stat-label">İzlendi</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Toplam</div>
+            </div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-percentage" id="progressPercentage">0%</div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <div class="filter-group">
+            <label class="filter-label">TÜR</label>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="type" data-value="all">Tümü</button>
+                <button class="filter-btn" data-filter="type" data-value="movie">Filmler</button>
+                <button class="filter-btn" data-filter="type" data-value="series">Diziler</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">DURUM</label>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="status" data-value="all">Tümü</button>
+                <button class="filter-btn" data-filter="status" data-value="watched">İzlediklerim</button>
+                <button class="filter-btn" data-filter="status" data-value="unwatched">İzlemediklerim</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">AİLE UYGUN</label>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="family" data-value="all">Tümü</button>
+                <button class="filter-btn" data-filter="family" data-value="yes">Aile İçin</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">SIRALAMA</label>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="sortOrder" data-value="release">Yayın Sırası</button>
+                <button class="filter-btn" data-filter="sortOrder" data-value="chronological">Kronolojik Sıra</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">FAZ</label>
+            <select class="phase-select" id="phaseFilter">
+                <option value="all">Tüm Fazlar</option>
+                <option value="1">Faz 1</option>
+                <option value="2">Faz 2</option>
+                <option value="3">Faz 3</option>
+                <option value="4">Faz 4</option>
+                <option value="5">Faz 5</option>
+                <option value="6">Faz 6</option>
+            </select>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" id="clearFilters">FİLTRELERİ TEMİZLE</button>
+            <button class="action-btn" id="markAllWatched">TÜMÜNÜ İŞARETLE</button>
+            <button class="action-btn danger" id="resetData">VERİLERİ SIFIRLA</button>
+        </div>
+    </div>
+
+    <!-- Content List -->
+    <div class="content-list" id="contentList"></div>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt" style="display: none;">
+        <h3>📱 ANA EKRANA EKLE</h3>
+        <p>Bu uygulamayı ana ekranına ekleyerek tam ekran Marvel deneyimi yaşa!</p>
+        <div class="install-buttons">
+            <button class="install-btn primary" id="installBtn">EKLE</button>
+            <button class="install-btn secondary" id="dismissInstall">KAPAT</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== MARVEL CONTENT DATA ==========
+        const marvelContent = [
+            // Phase 1
+            { id: 1, title: "Iron Man", type: "movie", year: 2008, phase: 1, chronologicalOrder: 3, isFamilyFriendly: true, description: "Tony Stark, kaçırıldıktan sonra high-tech zırh yaratır ve Iron Man olur.", poster: "https://m.media-amazon.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1_SX300.jpg" },
+            { id: 2, title: "The Incredible Hulk", type: "movie", year: 2008, phase: 1, chronologicalOrder: 4, isFamilyFriendly: true, description: "Bruce Banner, Hulk'a dönüşmesine sebep olan gamma radyasyonundan kurtulmaya çalışır.", poster: "https://m.media-amazon.com/images/M/MV5BMTUyNzk3MjA1OF5BMl5BanBnXkFtZTcwMTE1Njg2MQ@@._V1_SX300.jpg" },
+            { id: 3, title: "Iron Man 2", type: "movie", year: 2010, phase: 1, chronologicalOrder: 5, isFamilyFriendly: true, description: "Tony Stark, hem ölümcül bir düşmanla hem de kendi sağlık sorunlarıyla yüzleşir.", poster: "https://m.media-amazon.com/images/M/MV5BMTM0MDgwNjMyMl5BMl5BanBnXkFtZTcwNTg3NzAzMw@@._V1_SX300.jpg" },
+            { id: 4, title: "Thor", type: "movie", year: 2011, phase: 1, chronologicalOrder: 6, isFamilyFriendly: true, description: "Asgard'ın güçlü prensi Thor, Dünya'ya sürgün edilir ve alçakgönüllülük öğrenir.", poster: "https://m.media-amazon.com/images/M/MV5BOGE4NzU1YTAtNzA3Mi00ZTA2LTg2YmYtMDJmMThiMjlkYjg2XkEyXkFqcGdeQXVyNTgzMDMzMTg@._V1_SX300.jpg" },
+            { id: 5, title: "Captain America: The First Avenger", type: "movie", year: 2011, phase: 1, chronologicalOrder: 1, isFamilyFriendly: true, description: "Steve Rogers, süper asker Captain America olur ve Red Skull'a karşı savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMTYzOTc2NzU3N15BMl5BanBnXkFtZTcwNjY3MDE3NQ@@._V1_SX300.jpg" },
+            { id: 6, title: "The Avengers", type: "movie", year: 2012, phase: 1, chronologicalOrder: 7, isFamilyFriendly: true, description: "Earth's Mightiest Heroes, Loki ve Chitauri istilasına karşı bir araya gelir.", poster: "https://m.media-amazon.com/images/M/MV5BNDYxNjQyMjAtNTdiOS00NGYwLWFmNTAtNThmYjU5ZGI2YTI1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg" },
+            
+            // Phase 2
+            { id: 7, title: "Iron Man 3", type: "movie", year: 2013, phase: 2, chronologicalOrder: 8, isFamilyFriendly: true, description: "Tony Stark, Mandarin'in saldırısından sonra PTSD ile başa çıkmaya çalışır.", poster: "https://m.media-amazon.com/images/M/MV5BMjE5MzcyNjk1M15BMl5BanBnXkFtZTcwMjQ4MjcxOQ@@._V1_SX300.jpg" },
+            { id: 8, title: "Thor: The Dark World", type: "movie", year: 2013, phase: 2, chronologicalOrder: 9, isFamilyFriendly: true, description: "Thor, Malekith ve Dark Elves'e karşı dokuz diyarı korumak için savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMTQyNzAwOTUxOF5BMl5BanBnXkFtZTcwMTE0OTc5OQ@@._V1_SX300.jpg" },
+            { id: 9, title: "Captain America: The Winter Soldier", type: "movie", year: 2014, phase: 2, chronologicalOrder: 10, isFamilyFriendly: false, description: "Steve Rogers, SHIELD içindeki Hydra komplosuyla ve gizemli Winter Soldier ile yüzleşir.", poster: "https://m.media-amazon.com/images/M/MV5BMzA2NDkwODAwM15BMl5BanBnXkFtZTgwODk5MTgzMTE@._V1_SX300.jpg" },
+            { id: 10, title: "Guardians of the Galaxy", type: "movie", year: 2014, phase: 2, chronologicalOrder: 11, isFamilyFriendly: true, description: "Acayip uzay maceracılarından oluşan bir grup, galaksiyi korumak için bir araya gelir.", poster: "https://m.media-amazon.com/images/M/MV5BZTkwZjU3MTctMGExMi00YjU5LTgwMTMtZmNiOWNmODk3MTZiXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SX300.jpg" },
+            { id: 11, title: "Avengers: Age of Ultron", type: "movie", year: 2015, phase: 2, chronologicalOrder: 12, isFamilyFriendly: false, description: "Avengers, Tony Stark'ın yarattığı yapay zeka Ultron'un tehdidiyle karşılaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMTM4OGJmNWMtOTM4Ni00NTE3LTg3MDItZmQxYjc4N2JhNmUxXkEyXkFqcGdeQXVyNTgzMDMzMTg@._V1_SX300.jpg" },
+            { id: 12, title: "Ant-Man", type: "movie", year: 2015, phase: 2, chronologicalOrder: 13, isFamilyFriendly: true, description: "Scott Lang, Ant-Man kostümünü giyerek dünyayı kurtarmak için küçülme gücünü kullanır.", poster: "https://m.media-amazon.com/images/M/MV5BMjM2NTQ5Mzc2M15BMl5BanBnXkFtZTgwNTcxMDI2NTE@._V1_SX300.jpg" },
+            
+            // Phase 3
+            { id: 13, title: "Captain America: Civil War", type: "movie", year: 2016, phase: 3, chronologicalOrder: 14, isFamilyFriendly: false, description: "Avengers, Sokovia Anlaşması yüzünden ikiye bölünür.", poster: "https://m.media-amazon.com/images/M/MV5BMjQ0MTgyNjAxMV5BMl5BanBnXkFtZTgwNjUzMDkyODE@._V1_SX300.jpg" },
+            { id: 14, title: "Doctor Strange", type: "movie", year: 2016, phase: 3, chronologicalOrder: 15, isFamilyFriendly: true, description: "Cerrah Stephen Strange, gizemli sanatları öğrenerek büyücü olur.", poster: "https://m.media-amazon.com/images/M/MV5BNjgwNzAzNjk1Nl5BMl5BanBnXkFtZTgwMzQ2NjI1OTE@._V1_SX300.jpg" },
+            { id: 15, title: "Guardians of the Galaxy Vol. 2", type: "movie", year: 2017, phase: 3, chronologicalOrder: 16, isFamilyFriendly: true, description: "Star-Lord, gerçek babasıyla tanışır ve ekibiyle birlikte yeni tehlikelere karşı koyar.", poster: "https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg" },
+            { id: 16, title: "Spider-Man: Homecoming", type: "movie", year: 2017, phase: 3, chronologicalOrder: 17, isFamilyFriendly: true, description: "Peter Parker, lise hayatını sürdürürken Vulture ile savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BNTk4ODQ1MzgzNl5BMl5BanBnXkFtZTgwMTMyMzM4MTI@._V1_SX300.jpg" },
+            { id: 17, title: "Thor: Ragnarok", type: "movie", year: 2017, phase: 3, chronologicalOrder: 18, isFamilyFriendly: false, description: "Thor, Hela'ya karşı savaşırken Sakaar gezegeninde gladyatör olarak tutsak düşer.", poster: "https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_SX300.jpg" },
+            { id: 18, title: "Black Panther", type: "movie", year: 2018, phase: 3, chronologicalOrder: 19, isFamilyFriendly: true, description: "T'Challa, Wakanda'nın kralı olarak tahtını ve ülkesini korumak için savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_SX300.jpg" },
+            { id: 19, title: "Avengers: Infinity War", type: "movie", year: 2018, phase: 3, chronologicalOrder: 20, isFamilyFriendly: false, description: "Avengers ve müttefikleri, tüm evreni yok etmeye kararlı Thanos'a karşı savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_SX300.jpg" },
+            { id: 20, title: "Ant-Man and the Wasp", type: "movie", year: 2018, phase: 3, chronologicalOrder: 21, isFamilyFriendly: true, description: "Scott Lang ve Hope van Dyne, Quantum Realm'de yeni bir tehlikeye karşı savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BYjcyYTk0N2YtMzc4ZC00Y2E0LWFkNDgtNjE1MzZmMGE1YjY1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg" },
+            { id: 21, title: "Captain Marvel", type: "movie", year: 2019, phase: 3, chronologicalOrder: 2, isFamilyFriendly: true, description: "Carol Danvers, evrenin en güçlü kahramanlarından biri olur.", poster: "https://m.media-amazon.com/images/M/MV5BMTE0YWFmOTMtYTU2ZS00ZTIxLWE3OTEtYTNiYzBkZjViZThiXkEyXkFqcGdeQXVyODMzMzQ4OTI@._V1_SX300.jpg" },
+            { id: 22, title: "Avengers: Endgame", type: "movie", year: 2019, phase: 3, chronologicalOrder: 22, isFamilyFriendly: false, description: "Hayatta kalan Avengers, Thanos'u yenip kayıpları geri getirmek için bir son şans dener.", poster: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SX300.jpg" },
+            { id: 23, title: "Spider-Man: Far From Home", type: "movie", year: 2019, phase: 3, chronologicalOrder: 23, isFamilyFriendly: true, description: "Peter Parker, Avrupa tatilinde Mysterio ile karşılaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMGZlNTY1ZWUtYTMzNC00ZjUyLWE0MjQtMTMxN2E3ODYxMWVmXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_SX300.jpg" },
+            
+            // Phase 4
+            { id: 24, title: "WandaVision", type: "series", year: 2021, phase: 4, chronologicalOrder: 24, isFamilyFriendly: false, description: "Wanda ve Vision, tuhaf bir banliyö kasabasında sitcom hayatı yaşarlar.", poster: "https://m.media-amazon.com/images/M/MV5BZGEwYmMwZmMtMTQ3MS00YWNhLWEwMDgtYzUwMDNkMTE0NTNhXkEyXkFqcGdeQXVyMTI5MzA5MjA1._V1_SX300.jpg" },
+            { id: 25, title: "The Falcon and The Winter Soldier", type: "series", year: 2021, phase: 4, chronologicalOrder: 25, isFamilyFriendly: false, description: "Sam Wilson ve Bucky Barnes, yeni tehditlerle yüzleşir.", poster: "https://m.media-amazon.com/images/M/MV5BODNiODVmYjItM2MyMC00ZWQyLTgyMGYtNzJjMmVmZTY2OTJjXkEyXkFqcGdeQXVyNzk3NDUzNTc@._V1_SX300.jpg" },
+            { id: 26, title: "Loki", type: "series", year: 2021, phase: 4, chronologicalOrder: 26, isFamilyFriendly: false, description: "Loki, Time Variance Authority tarafından yakalandıktan sonra zaman çizelgesini düzeltmeye çalışır.", poster: "https://m.media-amazon.com/images/M/MV5BYjQ0NmJhMDItMmU0MC00MzY5LWE3YjAtNWM0ODYwMjNkMGMzXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg" },
+            { id: 27, title: "Black Widow", type: "movie", year: 2021, phase: 4, chronologicalOrder: 27, isFamilyFriendly: false, description: "Natasha Romanoff, kara geçmişiyle yüzleşir.", poster: "https://m.media-amazon.com/images/M/MV5BNjRmNDI5MjMtMmFhZi00YzcwLWI4ZGItMGI2MjI0N2Q3YmIwXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg" },
+            { id: 28, title: "What If...?", type: "series", year: 2021, phase: 4, chronologicalOrder: 28, isFamilyFriendly: true, description: "MCU'nun alternatif gerçekliklerdeki farklı versiyonları keşfedilir.", poster: "https://m.media-amazon.com/images/M/MV5BYWMyNjdmODgtZDMzNi00MzJmLWJmYTEtNjUwNjI0MmI4NmVlXkEyXkFqcGdeQXVyMTM1MTE1NDMx._V1_SX300.jpg" },
+            { id: 29, title: "Shang-Chi and the Legend of the Ten Rings", type: "movie", year: 2021, phase: 4, chronologicalOrder: 29, isFamilyFriendly: true, description: "Shang-Chi, On Halkalar örgütüyle ve babasıyla yüzleşir.", poster: "https://m.media-amazon.com/images/M/MV5BNTliYjlkNDQtMjFlNS00NjgzLWFmMWEtYmM2Mzc2Zjg3ZjEyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg" },
+            { id: 30, title: "Eternals", type: "movie", year: 2021, phase: 4, chronologicalOrder: 30, isFamilyFriendly: true, description: "Ölümsüz Eternals, binlerce yıldır gizlendikten sonra Deviants'a karşı birleşir.", poster: "https://m.media-amazon.com/images/M/MV5BYzJlYmFiMmQtZmY4MS00ODg2LWFmZjMtNjJlNWFlNDY1YzY3XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_SX300.jpg" },
+            { id: 31, title: "Hawkeye", type: "series", year: 2021, phase: 4, chronologicalOrder: 31, isFamilyFriendly: true, description: "Clint Barton, Kate Bishop'u eğitirken geçmişiyle hesaplaşır.", poster: "https://m.media-amazon.com/images/M/MV5BZDhlMzMwMjEtNzMzMy00MmQ1LWI0OTItODE0ZGI2MjkwNmE1XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_SX300.jpg" },
+            { id: 32, title: "Spider-Man: No Way Home", type: "movie", year: 2021, phase: 4, chronologicalOrder: 32, isFamilyFriendly: true, description: "Peter Parker, Doctor Strange'den yardım ister ve multiverse kapıları açılır.", poster: "https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_SX300.jpg" },
+            { id: 33, title: "Moon Knight", type: "series", year: 2022, phase: 4, chronologicalOrder: 33, isFamilyFriendly: false, description: "Marc Spector, dissociative identity disorder ile başa çıkarken Mısır tanrılarının gücünü kullanır.", poster: "https://m.media-amazon.com/images/M/MV5BYTc5OWNhYjktMThlOS00ODUxLTgwNDQtZjdjYjkyM2IwZTZlXkEyXkFqcGdeQXVyNTA3MTU2MjE@._V1_SX300.jpg" },
+            { id: 34, title: "Doctor Strange in the Multiverse of Madness", type: "movie", year: 2022, phase: 4, chronologicalOrder: 34, isFamilyFriendly: false, description: "Doctor Strange, multiverse'ü keşfederken büyük tehditlerle karşılaşır.", poster: "https://m.media-amazon.com/images/M/MV5BNWM0ZGJlMzMtZmYwMi00NzI3LTgzMzMtNjMzNjliNDRmZmFlXkEyXkFqcGdeQXVyMTM1MTE1NDMx._V1_SX300.jpg" },
+            { id: 35, title: "Ms. Marvel", type: "series", year: 2022, phase: 4, chronologicalOrder: 35, isFamilyFriendly: true, description: "Kamala Khan, süper güçler kazanır ve ailesinin geçmişini keşfeder.", poster: "https://m.media-amazon.com/images/M/MV5BMTg2Mzk2NjU0OF5BMl5BanBnXkFtZTgwMTY0MjQzNjM@._V1_SX300.jpg" },
+            { id: 36, title: "Thor: Love and Thunder", type: "movie", year: 2022, phase: 4, chronologicalOrder: 36, isFamilyFriendly: true, description: "Thor, Gorr the God Butcher'a karşı savaşırken eski sevgilisi Jane Foster ile yeniden bir araya gelir.", poster: "https://m.media-amazon.com/images/M/MV5BYmMxZWRiMTgtZjM0Ny00NDQxLWIxYWQtZDdlNDNkOTEzYTdlXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg" },
+            { id: 37, title: "She-Hulk: Attorney at Law", type: "series", year: 2022, phase: 4, chronologicalOrder: 37, isFamilyFriendly: true, description: "Jennifer Walters, She-Hulk gücüyle avukatlık yapar.", poster: "https://m.media-amazon.com/images/M/MV5BYjJlMDY5ZTQtZGU5MS00ZTFiLWFlNWItMGI5MzJlZTk0NzY5XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg" },
+            { id: 38, title: "Werewolf by Night", type: "movie", year: 2022, phase: 4, chronologicalOrder: 38, isFamilyFriendly: false, description: "Korku temalı özel bir Marvel hikayesi.", poster: "https://m.media-amazon.com/images/M/MV5BYjk0MTgzNTAtYWJjNS00ZDExLTgzZjMtNWY2MjY4ZmQzOWU0XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_SX300.jpg" },
+            { id: 39, title: "Black Panther: Wakanda Forever", type: "movie", year: 2022, phase: 4, chronologicalOrder: 39, isFamilyFriendly: false, description: "Wakanda, Kral T'Challa'nın ölümünün ardından Namor'un tehdidiyle yüzleşir.", poster: "https://m.media-amazon.com/images/M/MV5BNTM4NjIxNmEtYWE5NS00NDczLTkyNWQtYThhNmQyZGQzMjM0XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg" },
+            
+            // Phase 5
+            { id: 40, title: "Ant-Man and the Wasp: Quantumania", type: "movie", year: 2023, phase: 5, chronologicalOrder: 40, isFamilyFriendly: true, description: "Scott Lang ve ailesi Quantum Realm'de Kang the Conqueror ile karşılaşır.", poster: "https://m.media-amazon.com/images/M/MV5BODZhNzlmOGItMWUyYS00Y2Q5LWFlNzMtM2I2NDFkM2ZkYmE1XkEyXkFqcGdeQXVyMTU5OTA4NTIz._V1_SX300.jpg" },
+            { id: 41, title: "Guardians of the Galaxy Vol. 3", type: "movie", year: 2023, phase: 5, chronologicalOrder: 41, isFamilyFriendly: false, description: "Guardians, Rocket'ın geçmişini keşfederken High Evolutionary'ye karşı savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BMDgxOTdjMzYtZGQxMS00ZTAzLWI4Y2UtMTQzN2VlYjYyZWRiXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg" },
+            { id: 42, title: "Secret Invasion", type: "series", year: 2023, phase: 5, chronologicalOrder: 42, isFamilyFriendly: false, description: "Nick Fury, Dünya'yı ele geçirmeye çalışan Skrull'lara karşı savaşır.", poster: "https://m.media-amazon.com/images/M/MV5BY2EzN2U0MDQtNGRlOS00YWZlLWIyOTgtM2VlOTYyODM5NTA2XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg" },
+            { id: 43, title: "The Marvels", type: "movie", year: 2023, phase: 5, chronologicalOrder: 43, isFamilyFriendly: true, description: "Carol Danvers, Kamala Khan ve Monica Rambeau, güçleri birbirine karıştığında bir araya gelir.", poster: "https://m.media-amazon.com/images/M/MV5BM2U2YWU5NWMtOGI2Ni00MGMwLWFkNjItMjgyZWMxNjllNTMzXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_SX300.jpg" },
+            { id: 44, title: "Loki Season 2", type: "series", year: 2023, phase: 5, chronologicalOrder: 44, isFamilyFriendly: false, description: "Loki, zaman çizelgesini korumak için TVA'da çalışır.", poster: "https://m.media-amazon.com/images/M/MV5BZTQ5ZWQ1NjQtODI1Yi00MGZkLTk0YTYtNmJmZTg2NWE4YmU1XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg" },
+            { id: 45, title: "Echo", type: "series", year: 2024, phase: 5, chronologicalOrder: 45, isFamilyFriendly: false, description: "Maya Lopez, geçmişiyle ve Kingpin ile hesaplaşır.", poster: "https://m.media-amazon.com/images/M/MV5BYzJkM2Y0ZGQtZDYzMC00NmE3LWE5NjgtMzBiMjkyMWZhMGVkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg" },
+            { id: 46, title: "Deadpool & Wolverine", type: "movie", year: 2024, phase: 5, chronologicalOrder: 46, isFamilyFriendly: false, description: "Deadpool ve Wolverine, multiverse maceralarında bir araya gelir.", poster: "https://m.media-amazon.com/images/M/MV5BZTk3ZjY1MjgtOWRkZi00YjZjLWFlZDAtY2I5YzFjMjRhMjQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg" },
+            { id: 47, title: "Agatha All Along", type: "series", year: 2024, phase: 5, chronologicalOrder: 47, isFamilyFriendly: false, description: "Agatha Harkness, güçlerini geri kazanmak için Witches' Road'a gider.", poster: "https://m.media-amazon.com/images/M/MV5BYmU5MTdlZWQtMjQ1OC00OWQ2LWE4NzQtMTg5NmY3NTBlNTA0XkEyXkFqcGdeQXVyMTY3ODkyNDkz._V1_SX300.jpg" }
+        ];
+
+        // ========== STATE MANAGEMENT ==========
+        let currentFilters = {
+            type: 'all',
+            status: 'all',
+            family: 'all',
+            phase: 'all',
+            sortOrder: 'release' // 'release' veya 'chronological'
+        };
+
+        let watchedItems = JSON.parse(localStorage.getItem('marvelWatched')) || [];
+
+        // ========== INITIALIZATION ==========
+        function init() {
+            // Merge watched status into content
+            marvelContent.forEach(item => {
+                item.watched = watchedItems.includes(item.id);
+            });
+
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Render initial content
+            renderContent();
+            updateProgress();
+
+            // Show install prompt if not dismissed
+            showInstallPrompt();
+
+            // Register service worker
+            registerServiceWorker();
+        }
+
+        // ========== EVENT LISTENERS ==========
+        function setupEventListeners() {
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', handleFilterClick);
+            });
+
+            // Phase select
+            document.getElementById('phaseFilter').addEventListener('change', handlePhaseChange);
+
+            // Action buttons
+            document.getElementById('clearFilters').addEventListener('click', clearFilters);
+            document.getElementById('markAllWatched').addEventListener('click', markAllWatched);
+            document.getElementById('resetData').addEventListener('click', resetData);
+
+            // Install prompt
+            document.getElementById('installBtn').addEventListener('click', handleInstall);
+            document.getElementById('dismissInstall').addEventListener('click', dismissInstall);
+        }
+
+        // ========== FILTER HANDLING ==========
+        function handleFilterClick(e) {
+            const btn = e.target;
+            const filterType = btn.dataset.filter;
+            const filterValue = btn.dataset.value;
+
+            // Update active state
+            document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+
+            // Update filter state
+            currentFilters[filterType] = filterValue;
+
+            // Re-render
+            renderContent();
+        }
+
+        function handlePhaseChange(e) {
+            currentFilters.phase = e.target.value;
+            renderContent();
+        }
+
+        function clearFilters() {
+            currentFilters = {
+                type: 'all',
+                status: 'all',
+                family: 'all',
+                phase: 'all',
+                sortOrder: 'release'
+            };
+
+            // Reset UI
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.value === 'all' || (btn.dataset.filter === 'sortOrder' && btn.dataset.value === 'release')) {
+                    btn.classList.add('active');
+                }
+            });
+            document.getElementById('phaseFilter').value = 'all';
+
+            renderContent();
+        }
+
+        // ========== CONTENT RENDERING ==========
+        function renderContent() {
+            const container = document.getElementById('contentList');
+            const filtered = getFilteredContent();
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>HİÇBİR SONUÇ BULUNAMADI</h3>
+                        <p>Filtreleri değiştirmeyi deneyin</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map((item, index) => `
+                <div class="content-card ${item.watched ? 'watched' : ''}" style="animation-delay: ${index * 0.05}s">
+                    <div class="card-header" onclick="toggleDescription(${item.id})">
+                        <div class="poster">
+                            <img src="${item.poster}" alt="${item.title}" loading="lazy" onerror="this.parentElement.classList.add('loading'); this.style.display='none';">
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">${item.title}</div>
+                            <div class="card-meta">
+                                <span class="tag tag-type">${item.type === 'movie' ? 'FİLM' : 'DİZİ'}</span>
+                                <span class="tag tag-phase">FAZ ${item.phase}</span>
+                                <span class="tag tag-year">${item.year}</span>
+                                ${item.isFamilyFriendly ? '<span class="tag tag-family">AİLE</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="checkbox-container">
+                            <input 
+                                type="checkbox" 
+                                class="watched-checkbox" 
+                                ${item.watched ? 'checked' : ''}
+                                onclick="event.stopPropagation(); toggleWatched(${item.id})"
+                            >
+                        </div>
+                    </div>
+                    <div class="card-description" id="desc-${item.id}">
+                        ${item.description}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getFilteredContent() {
+            return marvelContent
+                .filter(item => {
+                    // Type filter
+                    if (currentFilters.type !== 'all' && item.type !== currentFilters.type) {
+                        return false;
+                    }
+
+                    // Status filter
+                    if (currentFilters.status === 'watched' && !item.watched) {
+                        return false;
+                    }
+                    if (currentFilters.status === 'unwatched' && item.watched) {
+                        return false;
+                    }
+
+                    // Family filter
+                    if (currentFilters.family === 'yes' && !item.isFamilyFriendly) {
+                        return false;
+                    }
+
+                    // Phase filter
+                    if (currentFilters.phase !== 'all' && item.phase !== parseInt(currentFilters.phase)) {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .sort((a, b) => {
+                    // Sıralama tipine göre sırala
+                    if (currentFilters.sortOrder === 'chronological') {
+                        // Kronolojik sıra (hikaye sırası)
+                        return a.chronologicalOrder - b.chronologicalOrder;
+                    } else {
+                        // Yayın sırası (çıkış yılı)
+                        if (a.year !== b.year) {
+                            return a.year - b.year;
+                        }
+                        return a.id - b.id;
+                    }
+                });
+        }
+
+        // ========== WATCHED TOGGLE ==========
+        function toggleWatched(id) {
+            const item = marvelContent.find(i => i.id === id);
+            item.watched = !item.watched;
+
+            if (item.watched) {
+                watchedItems.push(id);
+            } else {
+                watchedItems = watchedItems.filter(i => i !== id);
+            }
+
+            localStorage.setItem('marvelWatched', JSON.stringify(watchedItems));
+            updateProgress();
+        }
+
+        function toggleDescription(id) {
+            const desc = document.getElementById(`desc-${id}`);
+            desc.classList.toggle('show');
+        }
+
+        // ========== PROGRESS UPDATE ==========
+        function updateProgress() {
+            const total = marvelContent.length;
+            const watched = marvelContent.filter(i => i.watched).length;
+            const percentage = Math.round((watched / total) * 100);
+
+            document.getElementById('watchedCount').textContent = watched;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressPercentage').textContent = percentage + '%';
+        }
+
+        // ========== ACTION BUTTONS ==========
+        function markAllWatched() {
+            const filtered = getFilteredContent();
+            if (confirm(`${filtered.length} içeriğin tümünü izledim olarak işaretlemek istiyor musunuz?`)) {
+                filtered.forEach(item => {
+                    item.watched = true;
+                    if (!watchedItems.includes(item.id)) {
+                        watchedItems.push(item.id);
+                    }
+                });
+                localStorage.setItem('marvelWatched', JSON.stringify(watchedItems));
+                renderContent();
+                updateProgress();
+            }
+        }
+
+        function resetData() {
+            if (confirm('Tüm izleme verilerini silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                localStorage.removeItem('marvelWatched');
+                watchedItems = [];
+                marvelContent.forEach(item => item.watched = false);
+                renderContent();
+                updateProgress();
+            }
+        }
+
+        // ========== PWA INSTALL ==========
+        let deferredPrompt;
+
+        function showInstallPrompt() {
+            const dismissed = localStorage.getItem('installPromptDismissed');
+            if (!dismissed) {
+                setTimeout(() => {
+                    document.getElementById('installPrompt').style.display = 'block';
+                }, 3000);
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        function handleInstall() {
+            const installPrompt = document.getElementById('installPrompt');
+            installPrompt.style.display = 'none';
+
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                });
+            } else {
+                // iOS için manuel talimat
+                alert('Safari\'de, paylaş butonuna tıklayıp "Ana Ekrana Ekle" seçeneğini kullanabilirsiniz.');
+            }
+        }
+
+        function dismissInstall() {
+            document.getElementById('installPrompt').style.display = 'none';
+            localStorage.setItem('installPromptDismissed', 'true');
+        }
+
+        // ========== SERVICE WORKER ==========
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker kayıtlı'))
+                    .catch(err => console.log('Service Worker hatası:', err));
+            }
+        }
+
+        // Create Apple touch icon
+        const appleTouchIcon = document.createElement('link');
+        appleTouchIcon.rel = 'apple-touch-icon';
+        appleTouchIcon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23ed1d24' width='192' height='192'/%3E%3Ctext x='96' y='140' font-size='120' font-weight='900' text-anchor='middle' fill='white' font-family='Arial Black'%3EM%3C/text%3E%3C/svg%3E";
+        document.head.appendChild(appleTouchIcon);
+
+        // ========== START APP ==========
+        init();
+    </script>
+</body>
+</html>

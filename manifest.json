@@ -1,0 +1,24 @@
+{
+  "name": "Marvel İzleme Takibi",
+  "short_name": "Marvel",
+  "description": "Marvel filmlerini ve dizilerini takip edin",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#ed1d24",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23ed1d24' width='192' height='192'/%3E%3Ctext x='96' y='140' font-size='120' font-weight='900' text-anchor='middle' fill='white' font-family='Arial Black'%3EM%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%23ed1d24' width='512' height='512'/%3E%3Ctext x='256' y='380' font-size='320' font-weight='900' text-anchor='middle' fill='white' font-family='Arial Black'%3EM%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
